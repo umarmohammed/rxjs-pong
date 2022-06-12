@@ -1,34 +1,35 @@
 import { KeyPress } from "./keypress.type";
+import { keyPressToMove } from "./move";
+import { Paddle } from "./paddle.interface";
+
+const CENTER_Y = 500;
 
 export interface State {
-  leftPaddlePosition: number;
-  rightPaddlePosition: number;
+  leftPaddle: Paddle;
+  rightPaddle: Paddle;
 }
 
 export const initialState: State = {
-  leftPaddlePosition: 500,
-  rightPaddlePosition: 500,
+  leftPaddle: {
+    x: 0,
+    y: CENTER_Y,
+  },
+  rightPaddle: { x: 700, y: CENTER_Y },
 };
 
-const keyPressAction: Record<KeyPress, (state: State) => State> = {
-  a: (state) => ({
-    ...state,
-    leftPaddlePosition: state.leftPaddlePosition + 10,
-  }),
-  q: (state) => ({
-    ...state,
-    leftPaddlePosition: state.leftPaddlePosition - 10,
-  }),
-  l: (state) => ({
-    ...state,
-    rightPaddlePosition: state.rightPaddlePosition + 10,
-  }),
-  o: (state) => ({
-    ...state,
-    rightPaddlePosition: state.rightPaddlePosition - 10,
-  }),
-};
-
-export function reducer(state: State, keyPress: KeyPress) {
-  return keyPressAction[keyPress](state);
+export function reducer(state: State, keyPress: KeyPress): State {
+  switch (keyPressToMove[keyPress].side) {
+    case "left":
+      return {
+        ...state,
+        leftPaddle: keyPressToMove[keyPress].move(state.leftPaddle),
+      };
+    case "right":
+      return {
+        ...state,
+        rightPaddle: keyPressToMove[keyPress].move(state.rightPaddle),
+      };
+    default:
+      return state;
+  }
 }
