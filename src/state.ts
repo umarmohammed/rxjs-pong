@@ -1,5 +1,5 @@
 import { KeyPress } from "./keypress.type";
-import { keyPressToMove } from "./move";
+import { keyPressToMove, Move } from "./move";
 import { Paddle } from "./paddle.interface";
 
 const CENTER_Y = 500;
@@ -17,17 +17,19 @@ export const initialState: State = {
   rightPaddle: { x: 700, y: CENTER_Y },
 };
 
-export function reducer(state: State, keyPress: KeyPress): State {
-  switch (keyPressToMove[keyPress].side) {
+export function reducer(state: State, move: Move): State {
+  const { side, translate } = move;
+
+  switch (side) {
     case "left":
       return {
         ...state,
-        leftPaddle: keyPressToMove[keyPress].move(state.leftPaddle),
+        leftPaddle: translate(state.leftPaddle),
       };
     case "right":
       return {
         ...state,
-        rightPaddle: keyPressToMove[keyPress].move(state.rightPaddle),
+        rightPaddle: translate(state.rightPaddle),
       };
     default:
       return state;
