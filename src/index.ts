@@ -4,6 +4,32 @@ const gameKeyPresses = ["a", "q", "o", "l"] as const;
 
 type KeyPress = typeof gameKeyPresses[number];
 
+interface Paddle {
+  x: number;
+  initialY: number;
+  prop: keyof State;
+}
+
+const CENTER_Y = 500;
+
+const paddles: Paddle[] = [
+  {
+    x: 0,
+    initialY: CENTER_Y,
+    prop: "leftPaddlePosition",
+  },
+  {
+    x: 700,
+    initialY: CENTER_Y,
+    prop: "rightPaddlePosition",
+  },
+];
+
+const renderPaddlesFns = paddles.map(renderPaddle);
+
+const renderAllPaddles = (state: State) =>
+  renderPaddlesFns.map((x) => x(state));
+
 const keyPressAction: Record<KeyPress, (state: State) => State> = {
   a: (state) => ({
     ...state,
@@ -28,8 +54,6 @@ const movePaddleKey$ = fromEvent(window, "keyup").pipe(
   filter((x) => gameKeyPresses.includes(x))
 );
 
-movePaddleKey$.subscribe(console.log);
-
 interface State {
   leftPaddlePosition: number;
   rightPaddlePosition: number;
@@ -51,31 +75,22 @@ state$.subscribe(renderState);
 function renderState(state: State) {
   const root = document.getElementById("root");
 
-  root.replaceChildren(renderLeftPaddle(state), renderRightPaddle(state));
+  root.replaceChildren(...renderAllPaddles(state));
 }
 
-function renderLeftPaddle(state: State) {
-  const leftPaddle = document.createElement("div");
+function renderPaddle(paddle: Paddle) {
+  return (state: State) => {
+    const paddleDiv = document.createElement("div");
 
-  const leftPaddleTransform = `transform: translate(0px, ${state.leftPaddlePosition}px);`;
+    const paddleTransform = `transform: translate(${paddle.x}px, ${
+      state[paddle.prop]
+    }px);`;
 
-  leftPaddle.setAttribute(
-    "style",
-    `background: white; width: 8px; height: 24px; ${leftPaddleTransform}`
-  );
+    paddleDiv.setAttribute(
+      "style",
+      `background: white; width: 8px; height: 24px; ${paddleTransform}`
+    );
 
-  return leftPaddle;
-}
-
-function renderRightPaddle(state: State) {
-  const rightPaddle = document.createElement("div");
-
-  const rightPaddleTransform = `transform: translate(700px, ${state.rightPaddlePosition}px);`;
-
-  rightPaddle.setAttribute(
-    "style",
-    `background: white; width: 8px; height: 24px; ${rightPaddleTransform}`
-  );
-
-  return rightPaddle;
+    return paddleDiv;
+  };
 }
