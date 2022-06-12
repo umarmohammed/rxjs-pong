@@ -41,6 +41,10 @@ state$.subscribe(renderState);
 function renderState(state: State) {
   const root = document.getElementById("root");
 
+  root.replaceChildren(renderLeftPaddle(state));
+}
+
+function renderLeftPaddle(state: State) {
   const leftPaddle = document.createElement("div");
 
   const leftPaddleTransform = `transform: translate(0px, ${state.leftPaddlePosition}px);`;
@@ -50,5 +54,5 @@ function renderState(state: State) {
     `background: white; width: 8px; height: 24px; ${leftPaddleTransform}`
   );
 
-  root.replaceChildren(leftPaddle);
+  return leftPaddle;
 }
