@@ -1,17 +1,25 @@
 import { filter, fromEvent, map, scan } from "rxjs";
 
-const gameKeyPresses = ["ArrowDown", "ArrowUp"] as const;
+const gameKeyPresses = ["a", "q", "o", "l"] as const;
 
 type KeyPress = typeof gameKeyPresses[number];
 
 const keyPressAction: Record<KeyPress, (state: State) => State> = {
-  ArrowDown: (state) => ({
+  a: (state) => ({
     ...state,
     leftPaddlePosition: state.leftPaddlePosition + 10,
   }),
-  ArrowUp: (state) => ({
+  q: (state) => ({
     ...state,
     leftPaddlePosition: state.leftPaddlePosition - 10,
+  }),
+  l: (state) => ({
+    ...state,
+    rightPaddlePosition: state.rightPaddlePosition + 10,
+  }),
+  o: (state) => ({
+    ...state,
+    rightPaddlePosition: state.rightPaddlePosition - 10,
   }),
 };
 
@@ -24,10 +32,12 @@ movePaddleKey$.subscribe(console.log);
 
 interface State {
   leftPaddlePosition: number;
+  rightPaddlePosition: number;
 }
 
 const initialState: State = {
   leftPaddlePosition: 500,
+  rightPaddlePosition: 500,
 };
 
 const state$ = movePaddleKey$.pipe(scan(reducer, initialState));
@@ -41,7 +51,7 @@ state$.subscribe(renderState);
 function renderState(state: State) {
   const root = document.getElementById("root");
 
-  root.replaceChildren(renderLeftPaddle(state));
+  root.replaceChildren(renderLeftPaddle(state), renderRightPaddle(state));
 }
 
 function renderLeftPaddle(state: State) {
@@ -55,4 +65,17 @@ function renderLeftPaddle(state: State) {
   );
 
   return leftPaddle;
+}
+
+function renderRightPaddle(state: State) {
+  const rightPaddle = document.createElement("div");
+
+  const rightPaddleTransform = `transform: translate(700px, ${state.rightPaddlePosition}px);`;
+
+  rightPaddle.setAttribute(
+    "style",
+    `background: white; width: 8px; height: 24px; ${rightPaddleTransform}`
+  );
+
+  return rightPaddle;
 }
