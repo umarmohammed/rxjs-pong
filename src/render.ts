@@ -1,6 +1,9 @@
 import { Paddle } from "./paddle.interface";
 import { State } from "./state";
 
+const width = 512;
+const height = 256;
+
 function renderPaddle(paddle: Paddle) {
   const paddleDiv = document.createElement("div");
 
@@ -17,8 +20,14 @@ function renderPaddle(paddle: Paddle) {
 export function renderState(state: State) {
   const root = document.getElementById("root");
 
-  root.replaceChildren(
-    renderPaddle(state.leftPaddle),
-    renderPaddle(state.rightPaddle)
-  );
+  const canvas = document.getElementById("board") as HTMLCanvasElement;
+  const ctx = canvas.getContext("2d");
+
+  ctx.fillStyle = "green";
+  ctx.fillRect(10, 10, 150, 100);
+
+  // root.replaceChildren(
+  //   renderPaddle(state.leftPaddle),
+  //   renderPaddle(state.rightPaddle)
+  // );
 }
