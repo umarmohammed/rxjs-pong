@@ -1,8 +1,6 @@
-import { KeyPress } from "./keypress.type";
-import { keyPressToMove, Move } from "./move";
+import { LEFT_PADDLE_X, START_PADDLE_Y, RIGHT_PADDLE_X } from "./dimensions";
+import { Move } from "./move";
 import { Paddle } from "./paddle.interface";
-
-const CENTER_Y = 500;
 
 export interface State {
   leftPaddle: Paddle;
@@ -11,10 +9,10 @@ export interface State {
 
 export const initialState: State = {
   leftPaddle: {
-    x: 0,
-    y: CENTER_Y,
+    x: LEFT_PADDLE_X,
+    y: START_PADDLE_Y,
   },
-  rightPaddle: { x: 700, y: CENTER_Y },
+  rightPaddle: { x: RIGHT_PADDLE_X, y: START_PADDLE_Y },
 };
 
 export function reducer(state: State, move: Move): State {
