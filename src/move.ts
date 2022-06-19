@@ -3,26 +3,27 @@ import { Paddle } from "./paddle.interface";
 
 type Direction = "up" | "down";
 
-type Side = "left" | "right";
-
-export interface Move {
-  side: Side;
-  translate: (paddle: Paddle) => Paddle;
-}
+export const identity = <T>(x: T) => x;
 
 export const moveUp = move("up");
 export const moveDown = move("down");
+export const moveNone = identity;
 
-export const keyPressToMove: Record<KeyPress, Move> = {
-  a: { side: "left", translate: moveDown },
-  l: { side: "right", translate: moveDown },
-  o: { side: "right", translate: moveUp },
-  q: { side: "left", translate: moveUp },
+export const keyPressToMove: Record<KeyPress, (paddle: Paddle) => Paddle> = {
+  a: moveDown,
+  l: moveDown,
+  o: moveUp,
+  q: moveUp,
 };
 
 export function move(direction: Direction | null) {
+  const map: Record<Direction, number> = {
+    down: 10,
+    up: -10,
+  };
+
   return (paddle: Paddle): Paddle => ({
     ...paddle,
-    y: direction === "down" ? paddle.y + 10 : paddle.y - 10,
+    y: paddle.y + map[direction],
   });
 }

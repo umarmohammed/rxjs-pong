@@ -5,10 +5,11 @@ import {
   takeUntil,
   throttleTime,
   repeat,
-  merge,
+  combineLatest,
+  endWith,
 } from "rxjs";
 import { KeyPress } from "./keypress.type";
-import { keyPressToMove } from "./move";
+import { keyPressToMove, moveNone } from "./move";
 
 const leftMoveKeyup$ = fromEvent(window, "keyup").pipe(
   map((x) => (x as KeyboardEvent).key as KeyPress),
@@ -36,12 +37,14 @@ const rightMoveKeydown$ = fromEvent(window, "keydown").pipe(
 
 const moveLeftPaddle$ = leftMoveKeydown$.pipe(
   takeUntil(leftMoveKeyup$),
+  endWith(moveNone),
   repeat()
 );
 
 const moveRightPaddle$ = rightMoveKeydown$.pipe(
   takeUntil(rightMoveKeyup$),
+  endWith(moveNone),
   repeat()
 );
 
-export const move$ = merge(moveLeftPaddle$, moveRightPaddle$);
+export const move$ = combineLatest([moveLeftPaddle$, moveRightPaddle$]);
