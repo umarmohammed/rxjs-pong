@@ -10,7 +10,7 @@ import {
 } from "rxjs";
 import { PaddleMoveAction } from "./action";
 import { KeyPress } from "./keypress.type";
-import { keyPressToMove, moveNone } from "./move";
+import { keyPressToMove, moveNone } from "./paddle-move";
 
 const leftMoveKeyup$ = fromEvent(window, "keyup").pipe(
   map((x) => (x as KeyboardEvent).key as KeyPress),

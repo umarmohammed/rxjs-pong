@@ -1,4 +1,4 @@
-import { MovePaddles } from "./move";
+import { MovePaddles } from "./paddle-move";
 
 export enum ActionType {
   PaddleMove = "Paddle Move",
