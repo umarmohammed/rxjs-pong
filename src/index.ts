@@ -1,3 +1,3 @@
-import { startGame } from "./game-engine";
+import { startGame } from "./game-loop";
 
 startGame();
