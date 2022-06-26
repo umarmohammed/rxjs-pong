@@ -5,7 +5,7 @@ import { BOARD_WIDTH } from "./dimensions";
 
 export type MoveBall = (ball: Ball) => Ball;
 
-function getNewBall(ball: Ball): Ball {
+function moveBall(ball: Ball): Ball {
   const direction =
     (ball.x < BOARD_WIDTH && ball.direction.x > 0) ||
     (ball.x > 0 && ball.direction.x < 0)
@@ -18,8 +18,6 @@ function getNewBall(ball: Ball): Ball {
     direction,
   };
 }
-
-export const moveBall: MoveBall = (ball) => getNewBall(ball);
 
 export const ballMove$ = interval(50).pipe(
   map(() => new BallMoveAction(moveBall))
