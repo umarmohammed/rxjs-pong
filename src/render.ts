@@ -1,5 +1,7 @@
 import { Ball } from "./ball.interface";
 import {
+  BALL_HEIGHT,
+  BALL_WIDTH,
   BOARD_HEIGHT,
   BOARD_WIDTH,
   PADDLE_HEIGHT,
@@ -13,9 +15,9 @@ function renderPaddle(ctx: CanvasRenderingContext2D, paddle: Paddle) {
   ctx.fillRect(paddle.x, paddle.y, PADDLE_WIDTH, PADDLE_HEIGHT);
 }
 
-function renderBall(ctx:CanvasRenderingContext2D, ball: Ball) {
-  ctx.fillStyle = 'white';
-  ctx.fillRect(ball.x, ball.y, 4, 4);
+function renderBall(ctx: CanvasRenderingContext2D, ball: Ball) {
+  ctx.fillStyle = "white";
+  ctx.fillRect(ball.x, ball.y, BALL_WIDTH, BALL_HEIGHT);
 }
 
 export function renderState(state: State) {
@@ -34,5 +36,5 @@ export function renderState(state: State) {
 
   renderPaddle(ctx, state.leftPaddle);
   renderPaddle(ctx, state.rightPaddle);
-  renderBall(ctx, state.ball)
+  renderBall(ctx, state.ball);
 }
