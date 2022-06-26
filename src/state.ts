@@ -35,6 +35,13 @@ export function reducer(state: State, action: Actions): State {
       };
     }
 
+    case ActionType.BallMove: {
+      return {
+        ...state,
+        ball: action.payload(state.ball),
+      };
+    }
+
     default: {
       return state;
     }

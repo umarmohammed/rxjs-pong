@@ -1,3 +1,4 @@
+import { MoveBall } from "./ball-move";
 import { MovePaddles } from "./paddle-move";
 
 export enum ActionType {
@@ -16,4 +17,10 @@ export class PaddleMoveAction implements Action<MovePaddles> {
   constructor(public payload: MovePaddles) {}
 }
 
-export type Actions = PaddleMoveAction;
+export class BallMoveAction implements Action<MoveBall> {
+  public readonly type = ActionType.BallMove;
+
+  constructor(public payload: MoveBall) {}
+}
+
+export type Actions = PaddleMoveAction | BallMoveAction;

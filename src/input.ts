@@ -48,6 +48,7 @@ const moveRightPaddle$ = rightMoveKeydown$.pipe(
   repeat()
 );
 
-export const move$ = combineLatest([moveLeftPaddle$, moveRightPaddle$]).pipe(
-  map((movePaddles) => new PaddleMoveAction(movePaddles))
-);
+export const paddleMove$ = combineLatest([
+  moveLeftPaddle$,
+  moveRightPaddle$,
+]).pipe(map((movePaddles) => new PaddleMoveAction(movePaddles)));

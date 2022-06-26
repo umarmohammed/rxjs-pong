@@ -1,10 +1,13 @@
-import { interval, map, scan, withLatestFrom } from "rxjs";
-import { move$ } from "./input";
+import { interval, map, merge, scan, withLatestFrom } from "rxjs";
+import { ballMove$ } from "./ball-move";
+import { paddleMove$ } from "./input";
 import { renderState } from "./render";
 import { initialState, reducer } from "./state";
 
 export function startGame() {
-  const state$ = move$.pipe(scan(reducer, initialState));
+  const state$ = merge(paddleMove$, ballMove$).pipe(
+    scan(reducer, initialState)
+  );
 
   const game$ = interval(50).pipe(
     withLatestFrom(state$),
