@@ -1,3 +1,4 @@
+import { Ball } from "./ball.interface";
 import {
   BOARD_HEIGHT,
   BOARD_WIDTH,
@@ -10,6 +11,11 @@ import { State } from "./state";
 function renderPaddle(ctx: CanvasRenderingContext2D, paddle: Paddle) {
   ctx.fillStyle = "white";
   ctx.fillRect(paddle.x, paddle.y, PADDLE_WIDTH, PADDLE_HEIGHT);
+}
+
+function renderBall(ctx:CanvasRenderingContext2D, ball: Ball) {
+  ctx.fillStyle = 'white';
+  ctx.fillRect(ball.x, ball.y, 4, 4);
 }
 
 export function renderState(state: State) {
@@ -28,4 +34,5 @@ export function renderState(state: State) {
 
   renderPaddle(ctx, state.leftPaddle);
   renderPaddle(ctx, state.rightPaddle);
+  renderBall(ctx, state.ball)
 }

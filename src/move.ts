@@ -7,16 +7,16 @@ export const identity = <T>(x: T) => x;
 
 export const moveUp = move("up");
 export const moveDown = move("down");
-export const moveNone = identity;
+export const moveNone: MovePaddle = identity;
 
-export const keyPressToMove: Record<KeyPress, (paddle: Paddle) => Paddle> = {
+export const keyPressToMove: Record<KeyPress, MovePaddle> = {
   a: moveDown,
   l: moveDown,
   o: moveUp,
   q: moveUp,
 };
 
-export function move(direction: Direction | null) {
+export function move(direction: Direction | null): MovePaddle {
   const map: Record<Direction, number> = {
     down: 10,
     up: -10,
@@ -27,3 +27,7 @@ export function move(direction: Direction | null) {
     y: paddle.y + map[direction],
   });
 }
+
+export type MovePaddle = (paddle: Paddle) => Paddle;
+
+export type MovePaddles = [MovePaddle, MovePaddle];

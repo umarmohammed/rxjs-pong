@@ -8,6 +8,7 @@ import {
   combineLatest,
   endWith,
 } from "rxjs";
+import { PaddleMoveAction } from "./action";
 import { KeyPress } from "./keypress.type";
 import { keyPressToMove, moveNone } from "./move";
 
@@ -47,4 +48,6 @@ const moveRightPaddle$ = rightMoveKeydown$.pipe(
   repeat()
 );
 
-export const move$ = combineLatest([moveLeftPaddle$, moveRightPaddle$]);
+export const move$ = combineLatest([moveLeftPaddle$, moveRightPaddle$]).pipe(
+  map((movePaddles) => new PaddleMoveAction(movePaddles))
+);
