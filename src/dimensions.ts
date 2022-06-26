@@ -1,3 +1,5 @@
+import { Vector } from "./vector";
+
 export const BOARD_WIDTH = 1024;
 export const BOARD_HEIGHT = BOARD_WIDTH / 2;
 
@@ -15,3 +17,5 @@ export const BOARD_CENTER_Y = BOARD_HEIGHT / 2;
 
 export const BALL_WIDTH = 4;
 export const BALL_HEIGHT = 4;
+
+export const BALL_INITIAL_DIRECTION: Vector = { x: 10, y: 0 };

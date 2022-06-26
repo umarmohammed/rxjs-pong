@@ -5,6 +5,7 @@ import {
   START_PADDLE_Y,
   RIGHT_PADDLE_X,
   BOARD_CENTER_Y,
+  BALL_INITIAL_DIRECTION,
 } from "./dimensions";
 import { Paddle } from "./paddle.interface";
 
@@ -20,7 +21,7 @@ export const initialState: State = {
     y: START_PADDLE_Y,
   },
   rightPaddle: { x: RIGHT_PADDLE_X, y: START_PADDLE_Y },
-  ball: { x: 0, y: BOARD_CENTER_Y },
+  ball: { x: 0, y: BOARD_CENTER_Y, direction: BALL_INITIAL_DIRECTION },
 };
 
 export function reducer(state: State, action: Actions): State {
