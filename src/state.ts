@@ -39,7 +39,7 @@ export function reducer(state: State, action: Actions): State {
     case ActionType.BallMove: {
       return {
         ...state,
-        ball: action.payload(state.ball),
+        ball: action.payload(state.ball, state.leftPaddle, state.rightPaddle),
       };
     }
 
