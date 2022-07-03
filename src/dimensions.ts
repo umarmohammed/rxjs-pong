@@ -18,4 +18,4 @@ export const BOARD_CENTER_Y = BOARD_HEIGHT / 2;
 export const BALL_WIDTH = 4;
 export const BALL_HEIGHT = 4;
 
-export const BALL_INITIAL_DIRECTION: Vector = { x: 2, y: 0.2 };
+export const BALL_INITIAL_DIRECTION: Vector = { x: 4, y: 0.4 };
