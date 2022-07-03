@@ -1,9 +1,8 @@
 import { interval, map } from "rxjs";
 import { BallMoveAction } from "./action";
-import { Ball } from "./ball.interface";
+import { Ball, getInitialBall } from "./ball.interface";
 import {
   BOARD_HEIGHT,
-  BOARD_PADDING,
   BOARD_WIDTH,
   PADDLE_HEIGHT,
   PADDLE_WIDTH,
@@ -43,6 +42,10 @@ function bounceBallOffPaddle(
     : ball;
 }
 
+function ballOutOfBounds(ball: Ball) {
+  return ball.x < 0 || ball.x > BOARD_WIDTH;
+}
+
 function bounceBallOffHorizontalWall(ball: Ball): Ball {
   const ballWithinBoard = ball.y < BOARD_HEIGHT && ball.y > 0;
 
@@ -69,6 +72,10 @@ export type MoveBall = (
 ) => Ball;
 
 function moveBall(ball: Ball, leftPaddle: Paddle, rightPaddle: Paddle): Ball {
+  if (ballOutOfBounds(ball)) {
+    return getInitialBall();
+  }
+
   const nextBall = getNextBallPosition(ball);
 
   const newBall = bounceBallOffHorizontalWall(
