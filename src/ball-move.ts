@@ -1,7 +1,13 @@
 import { interval, map } from "rxjs";
 import { BallMoveAction } from "./action";
 import { Ball } from "./ball.interface";
-import { PADDLE_HEIGHT, PADDLE_WIDTH } from "./dimensions";
+import {
+  BOARD_HEIGHT,
+  BOARD_PADDING,
+  BOARD_WIDTH,
+  PADDLE_HEIGHT,
+  PADDLE_WIDTH,
+} from "./dimensions";
 import { Paddle } from "./paddle.interface";
 
 function ballIntersectsPaddle(
@@ -9,22 +15,43 @@ function ballIntersectsPaddle(
   paddle: Paddle,
   side: "right" | "left"
 ) {
-  console.log({ ball, paddle, side });
-
   const ballWithinPaddleY =
     ball.y > paddle.y && ball.y < paddle.y + PADDLE_HEIGHT;
   const ballWillHitLeftPaddleX =
-    side === "left" &&
-    getNextBallPosition(ball).x < paddle.x + PADDLE_WIDTH &&
-    ball.direction.x < 0;
+    side === "left" && ball.x < paddle.x + PADDLE_WIDTH && ball.direction.x < 0;
   const ballWillHitRightPaddleX =
     side === "right" &&
-    getNextBallPosition(ball).x > paddle.x - PADDLE_WIDTH &&
+    ball.x > paddle.x - PADDLE_WIDTH &&
     ball.direction.x > 0;
 
   return (
     ballWithinPaddleY && (ballWillHitLeftPaddleX || ballWillHitRightPaddleX)
   );
+}
+
+function bounceBallOffPaddle(
+  ball: Ball,
+  leftPaddle: Paddle,
+  rightPaddle: Paddle
+): Ball {
+  return ballIntersectsPaddle(ball, leftPaddle, "left") ||
+    ballIntersectsPaddle(ball, rightPaddle, "right")
+    ? {
+        ...ball,
+        direction: { x: ball.direction.x * -1, y: ball.direction.y },
+      }
+    : ball;
+}
+
+function bounceBallOffHorizontalWall(ball: Ball): Ball {
+  const ballWithinBoard = ball.y < BOARD_HEIGHT && ball.y > 0;
+
+  return ballWithinBoard
+    ? ball
+    : {
+        ...ball,
+        direction: { ...ball.direction, y: ball.direction.y * -1 },
+      };
 }
 
 function getNextBallPosition(ball: Ball): Ball {
@@ -42,16 +69,13 @@ export type MoveBall = (
 ) => Ball;
 
 function moveBall(ball: Ball, leftPaddle: Paddle, rightPaddle: Paddle): Ball {
-  const direction =
-    ballIntersectsPaddle(ball, leftPaddle, "left") ||
-    ballIntersectsPaddle(ball, rightPaddle, "right")
-      ? { x: ball.direction.x * -1, y: ball.direction.y }
-      : ball.direction;
+  const nextBall = getNextBallPosition(ball);
 
-  return {
-    ...getNextBallPosition(ball),
-    direction,
-  };
+  const newBall = bounceBallOffHorizontalWall(
+    bounceBallOffPaddle(nextBall, leftPaddle, rightPaddle)
+  );
+
+  return newBall;
 }
 
 export const ballMove$ = interval(20).pipe(
