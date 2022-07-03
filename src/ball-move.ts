@@ -19,7 +19,7 @@ function ballIntersectsPaddle(
     ball.direction.x < 0;
   const ballWillHitRightPaddleX =
     side === "right" &&
-    getNextBallPosition(ball).x > paddle.x &&
+    getNextBallPosition(ball).x > paddle.x - PADDLE_WIDTH &&
     ball.direction.x > 0;
 
   return (
@@ -54,6 +54,6 @@ function moveBall(ball: Ball, leftPaddle: Paddle, rightPaddle: Paddle): Ball {
   };
 }
 
-export const ballMove$ = interval(50).pipe(
+export const ballMove$ = interval(20).pipe(
   map(() => new BallMoveAction(moveBall))
 );
