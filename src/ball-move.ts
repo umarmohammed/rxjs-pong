@@ -71,7 +71,11 @@ export type MoveBall = (
   rightPaddle: Paddle
 ) => Ball;
 
-function moveBall(ball: Ball, leftPaddle: Paddle, rightPaddle: Paddle): Ball {
+export function moveBall(
+  ball: Ball,
+  leftPaddle: Paddle,
+  rightPaddle: Paddle
+): Ball {
   if (ballOutOfBounds(ball)) {
     return getInitialBall();
   }
