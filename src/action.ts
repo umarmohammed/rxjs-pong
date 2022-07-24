@@ -1,9 +1,13 @@
 import { MoveBall } from "./ball-move";
+import { Ball } from "./ball.interface";
+import { InputState } from "./input-state";
 import { MovePaddles } from "./paddle-move";
+import { State } from "./state";
 
 export enum ActionType {
   PaddleMove = "Paddle Move",
   BallMove = "Ball Move",
+  UpdateState = "Update State",
 }
 
 export interface Action<T> {
@@ -23,4 +27,12 @@ export class BallMoveAction implements Action<MoveBall> {
   constructor(public payload: MoveBall) {}
 }
 
-export type Actions = PaddleMoveAction | BallMoveAction;
+export class UpdateStateAction
+  implements Action<{ state: State; inputState: InputState }>
+{
+  public readonly type = ActionType.UpdateState;
+
+  constructor(public payload: { state: State; inputState: InputState }) {}
+}
+
+export type Actions = PaddleMoveAction | BallMoveAction | UpdateStateAction;

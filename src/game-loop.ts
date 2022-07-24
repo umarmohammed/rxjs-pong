@@ -1,18 +1,16 @@
 import { interval, map, merge, scan, withLatestFrom } from "rxjs";
+import { tap } from "rxjs/operators";
+import { UpdateStateAction } from "./action";
 import { ballMove$ } from "./ball-move";
 import { paddleMove$ } from "./input";
 import { renderState } from "./render";
-import { initialState, reducer } from "./state";
+import { initialState, reducer, state$ } from "./state";
 
 export function startGame() {
-  const state$ = merge(paddleMove$, ballMove$).pipe(
-    scan(reducer, initialState)
+  const updateState$ = interval(50).pipe(
+    withLatestFrom([state$, inputState$]),
+    map(([, state, inputState]) => new UpdateStateAction(state, inputState))
   );
 
-  const game$ = interval(50).pipe(
-    withLatestFrom(state$),
-    map(([_, state]) => state)
-  );
-
-  game$.subscribe(renderState);
+  updateState$.pipe(scan(reducer, initialState)).subscribe(renderState);
 }

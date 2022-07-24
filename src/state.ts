@@ -1,6 +1,7 @@
 import { Actions, ActionType } from "./action";
 import { Ball, getInitialBall } from "./ball.interface";
 import { LEFT_PADDLE_X, START_PADDLE_Y, RIGHT_PADDLE_X } from "./dimensions";
+import { InputState } from "./input-state";
 import { Paddle } from "./paddle.interface";
 
 export interface State {
@@ -37,8 +38,23 @@ export function reducer(state: State, action: Actions): State {
       };
     }
 
+    case ActionType.UpdateState: {
+      return updateState(action.payload);
+    }
+
     default: {
       return state;
     }
   }
+}
+
+function updateState({
+  state,
+  inputState,
+}: {
+  state: State;
+  inputState: InputState;
+}): State {
+  // the game logic
+  return state;
 }
