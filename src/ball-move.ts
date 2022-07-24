@@ -1,5 +1,3 @@
-import { interval, map } from "rxjs";
-import { BallMoveAction } from "./action";
 import { Ball, getInitialBall } from "./ball.interface";
 import {
   BOARD_HEIGHT,
@@ -88,7 +86,3 @@ export function moveBall(
 
   return newBall;
 }
-
-export const ballMove$ = interval(20).pipe(
-  map(() => new BallMoveAction(moveBall))
-);

@@ -22,23 +22,6 @@ export const initialState: State = {
 
 export function reducer(state: State, action: Actions): State {
   switch (action.type) {
-    case ActionType.PaddleMove: {
-      const [leftMove, rightMove] = action.payload;
-
-      return {
-        ...state,
-        leftPaddle: leftMove(state.leftPaddle),
-        rightPaddle: rightMove(state.rightPaddle),
-      };
-    }
-
-    case ActionType.BallMove: {
-      return {
-        ...state,
-        ball: action.payload(state.ball, state.leftPaddle, state.rightPaddle),
-      };
-    }
-
     case ActionType.UpdateState: {
       return updateState(state, action.payload);
     }

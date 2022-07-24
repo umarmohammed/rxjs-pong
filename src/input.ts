@@ -1,61 +1,7 @@
-import {
-  fromEvent,
-  map,
-  filter,
-  takeUntil,
-  throttleTime,
-  repeat,
-  combineLatest,
-  endWith,
-  merge,
-  Observable,
-} from "rxjs";
+import { fromEvent, map, filter, combineLatest, merge, Observable } from "rxjs";
 import { startWith } from "rxjs/operators";
-import { PaddleMoveAction } from "./action";
 import { KeyPress } from "./keypress.type";
 import { MoveState } from "./move-state";
-import { keyPressToMove, moveNone } from "./paddle-move";
-
-const leftMoveKeyup$ = fromEvent(window, "keyup").pipe(
-  map((x) => (x as KeyboardEvent).key as KeyPress),
-  filter((x) => x === "q" || x === "a")
-);
-
-const leftMoveKeydown$ = fromEvent(window, "keydown").pipe(
-  map((x) => (x as KeyboardEvent).key as KeyPress),
-  filter((x) => x === "q" || x === "a"),
-  map((x) => keyPressToMove[x]),
-  throttleTime(50)
-);
-
-const rightMoveKeyup$ = fromEvent(window, "keyup").pipe(
-  map((x) => (x as KeyboardEvent).key as KeyPress),
-  filter((x) => x === "o" || x === "l")
-);
-
-const rightMoveKeydown$ = fromEvent(window, "keydown").pipe(
-  map((x) => (x as KeyboardEvent).key as KeyPress),
-  filter((x) => x === "o" || x === "l"),
-  map((x) => keyPressToMove[x]),
-  throttleTime(50)
-);
-
-const moveLeftPaddle$ = leftMoveKeydown$.pipe(
-  takeUntil(leftMoveKeyup$),
-  endWith(moveNone),
-  repeat()
-);
-
-const moveRightPaddle$ = rightMoveKeydown$.pipe(
-  takeUntil(rightMoveKeyup$),
-  endWith(moveNone),
-  repeat()
-);
-
-export const paddleMove$ = combineLatest([
-  moveLeftPaddle$,
-  moveRightPaddle$,
-]).pipe(map((movePaddles) => new PaddleMoveAction(movePaddles)));
 
 const leftMoveUpKeyPressed$ = fromEvent(window, "keydown").pipe(
   map((x) => (x as KeyboardEvent).key as KeyPress),
