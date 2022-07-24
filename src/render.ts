@@ -21,20 +21,31 @@ function renderBall(ctx: CanvasRenderingContext2D, ball: Ball) {
 }
 
 export function renderState(state: State) {
-  const root = document.getElementById("root") as HTMLDivElement;
+  function renderBoard() {
+    const canvas = document.getElementById("board") as HTMLCanvasElement;
+    const ctx = canvas.getContext("2d");
+    canvas.setAttribute("width", BOARD_WIDTH.toString());
+    canvas.setAttribute("height", BOARD_HEIGHT.toString());
 
+    ctx.fillStyle = "black";
+    ctx.fillRect(0, 0, BOARD_WIDTH, BOARD_HEIGHT);
+
+    renderPaddle(ctx, state.leftPaddle);
+    renderPaddle(ctx, state.rightPaddle);
+    renderBall(ctx, state.ball);
+  }
+
+  function renderScore(id: string, score: number) {
+    const scoreElement = document.getElementById(id) as HTMLSpanElement;
+    scoreElement.innerText = score.toString();
+  }
+
+  // Can we do this once at the start?
+  const root = document.getElementById("root") as HTMLDivElement;
   root.style.width = `${BOARD_WIDTH}px`;
   root.style.height = `${BOARD_HEIGHT}px`;
 
-  const canvas = document.getElementById("board") as HTMLCanvasElement;
-  const ctx = canvas.getContext("2d");
-  canvas.setAttribute("width", BOARD_WIDTH.toString());
-  canvas.setAttribute("height", BOARD_HEIGHT.toString());
-
-  ctx.fillStyle = "black";
-  ctx.fillRect(0, 0, BOARD_WIDTH, BOARD_HEIGHT);
-
-  renderPaddle(ctx, state.leftPaddle);
-  renderPaddle(ctx, state.rightPaddle);
-  renderBall(ctx, state.ball);
+  renderBoard();
+  renderScore("leftPlayerScore", state.leftPlayerScore);
+  renderScore("rightPlayerScore", state.rightPlayerScore);
 }

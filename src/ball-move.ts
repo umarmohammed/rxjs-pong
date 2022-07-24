@@ -40,8 +40,8 @@ function bounceBallOffPaddle(
     : ball;
 }
 
-function ballOutOfBounds(ball: Ball) {
-  return ball.x < 0 || ball.x > BOARD_WIDTH;
+export function ballOutOfBounds(ball: Ball): number {
+  return ball.x < 0 ? -1 : ball.x > BOARD_WIDTH ? 1 : 0;
 }
 
 function bounceBallOffHorizontalWall(ball: Ball): Ball {
