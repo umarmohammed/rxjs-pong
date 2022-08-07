@@ -1,4 +1,3 @@
-import { Actions, ActionType } from "./action";
 import { ballOutOfBounds, moveBall } from "./ball-move";
 import { Ball, getInitialBall } from "./ball.interface";
 import { LEFT_PADDLE_X, START_PADDLE_Y, RIGHT_PADDLE_X } from "./dimensions";
@@ -24,19 +23,7 @@ export const initialState: State = {
   rightPlayerScore: 0,
 };
 
-export function reducer(state: State, action: Actions): State {
-  switch (action.type) {
-    case ActionType.UpdateState: {
-      return updateState(state, action.payload);
-    }
-
-    default: {
-      return state;
-    }
-  }
-}
-
-function updateState(state: State, moveState: MoveState): State {
+export function reducer(state: State, moveState: MoveState): State {
   const outOfBounds = ballOutOfBounds(state.ball);
 
   return {
