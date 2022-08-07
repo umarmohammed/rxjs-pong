@@ -2,80 +2,47 @@ import { fromEvent, map, filter, combineLatest, merge, Observable } from "rxjs";
 import { startWith } from "rxjs/operators";
 import { KeysPressed } from "./keys-pressed";
 
-const leftMoveUpKeyPressed$ = fromEvent(window, "keydown").pipe(
-  map((x) => (x as KeyboardEvent).key),
-  filter((x) => x === "q"),
-  map(() => true)
-);
+const keyPressEvents = ["keydown", "keyup"] as const;
 
-const leftMoveUpKeyReleased$ = fromEvent(window, "keyup").pipe(
-  map((x) => (x as KeyboardEvent).key),
-  filter((x) => x === "q"),
-  map(() => false)
-);
+type KeyPressEvent = typeof keyPressEvents[number];
 
-const leftMoveDownKeyPressed$ = fromEvent(window, "keydown").pipe(
-  map((x) => (x as KeyboardEvent).key),
-  filter((x) => x === "a"),
-  map(() => true)
-);
+const gameKeys = ["q", "a", "o", "l"] as const;
+type GameKeys = typeof gameKeys[number];
 
-const leftMoveDownKeyReleased$ = fromEvent(window, "keyup").pipe(
-  map((x) => (x as KeyboardEvent).key),
-  filter((x) => x === "a"),
-  map(() => false)
-);
+export const keyPressToMove: Record<GameKeys, keyof KeysPressed> = {
+  q: "leftUp",
+  a: "leftDown",
+  o: "rightUp",
+  l: "rightDown",
+};
 
-const rightMoveDownKeyPressed$ = fromEvent(window, "keydown").pipe(
-  map((x) => (x as KeyboardEvent).key),
-  filter((x) => x === "l"),
-  map(() => true)
-);
+function keyEventHof(keyPressEvent: KeyPressEvent) {
+  return (key: GameKeys) =>
+    fromEvent<KeyboardEvent>(window, keyPressEvent).pipe(
+      filter((keyboardEvent) => keyboardEvent.key === key),
+      map(() => ({
+        move: keyPressToMove[key],
+        keyPressed: keyPressEvent === "keydown",
+      }))
+    );
+}
 
-const rightMoveDownKeyReleased$ = fromEvent(window, "keyup").pipe(
-  map((x) => (x as KeyboardEvent).key),
-  filter((x) => x === "l"),
-  map(() => false)
-);
+const createKeyDownObservable = keyEventHof("keydown");
+const createKeyUpObservable = keyEventHof("keyup");
 
-const rightMoveUpKeyPressed$ = fromEvent(window, "keydown").pipe(
-  map((x) => (x as KeyboardEvent).key),
-  filter((x) => x === "o"),
-  map(() => true)
-);
+function createKeyPressedObservable(key: GameKeys) {
+  return merge(createKeyDownObservable(key), createKeyUpObservable(key)).pipe(
+    startWith({ move: keyPressToMove[key], keyPressed: false })
+  );
+}
 
-const rightMoveUpKeyReleased$ = fromEvent(window, "keyup").pipe(
-  map((x) => (x as KeyboardEvent).key),
-  filter((x) => x === "o"),
-  map(() => false)
-);
-
-const leftDown$ = merge(leftMoveDownKeyPressed$, leftMoveDownKeyReleased$).pipe(
-  startWith(false)
-);
-const leftUp$ = merge(leftMoveUpKeyPressed$, leftMoveUpKeyReleased$).pipe(
-  startWith(false)
-);
-
-const rightDown$ = merge(
-  rightMoveDownKeyPressed$,
-  rightMoveDownKeyReleased$
-).pipe(startWith(false));
-
-const rightUp$ = merge(rightMoveUpKeyPressed$, rightMoveUpKeyReleased$).pipe(
-  startWith(false)
-);
-
-export const keysPressed$: Observable<KeysPressed> = combineLatest([
-  leftUp$,
-  leftDown$,
-  rightUp$,
-  rightDown$,
-]).pipe(
-  map(([leftUp, leftDown, rightUp, rightDown]) => ({
-    leftUp,
-    leftDown,
-    rightUp,
-    rightDown,
-  }))
+export const keysPressed$: Observable<KeysPressed> = combineLatest(
+  gameKeys.map(createKeyPressedObservable)
+).pipe(
+  map((keysPressed) =>
+    keysPressed.reduce(
+      (prev, { move, keyPressed }) => ({ ...prev, [move]: keyPressed }),
+      {} as KeysPressed
+    )
+  )
 );
