@@ -3,7 +3,6 @@ import { startWith } from "rxjs/operators";
 import { KeysPressed } from "./keys-pressed";
 
 const keyPressEvents = ["keydown", "keyup"] as const;
-
 type KeyPressEvent = typeof keyPressEvents[number];
 
 const gameKeys = ["q", "a", "o", "l"] as const;
@@ -16,8 +15,13 @@ export const keyPressToMove: Record<GameKeys, keyof KeysPressed> = {
   l: "rightDown",
 };
 
+interface MovePressed {
+  move: keyof KeysPressed;
+  keyPressed: boolean;
+}
+
 function keyEventHof(keyPressEvent: KeyPressEvent) {
-  return (key: GameKeys) =>
+  return (key: GameKeys): Observable<MovePressed> =>
     fromEvent<KeyboardEvent>(window, keyPressEvent).pipe(
       filter((keyboardEvent) => keyboardEvent.key === key),
       map(() => ({
@@ -32,7 +36,7 @@ const createKeyUpObservable = keyEventHof("keyup");
 
 function createKeyPressedObservable(key: GameKeys) {
   return merge(createKeyDownObservable(key), createKeyUpObservable(key)).pipe(
-    startWith({ move: keyPressToMove[key], keyPressed: false })
+    startWith<MovePressed>({ move: keyPressToMove[key], keyPressed: false })
   );
 }
 
