@@ -1,4 +1,4 @@
-export interface MoveState {
+export interface KeysPressed {
   leftUp: boolean;
   leftDown: boolean;
   rightUp: boolean;

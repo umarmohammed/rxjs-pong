@@ -1,7 +1,7 @@
 import { fromEvent, map, filter, combineLatest, merge, Observable } from "rxjs";
 import { startWith } from "rxjs/operators";
 import { KeyPress } from "./keypress.type";
-import { MoveState } from "./move-state";
+import { KeysPressed } from "./keys-pressed";
 
 const leftMoveUpKeyPressed$ = fromEvent(window, "keydown").pipe(
   map((x) => (x as KeyboardEvent).key as KeyPress),
@@ -67,7 +67,7 @@ const rightUp$ = merge(rightMoveUpKeyPressed$, rightMoveUpKeyReleased$).pipe(
   startWith(false)
 );
 
-export const moveState$: Observable<MoveState> = combineLatest([
+export const keysPressed$: Observable<KeysPressed> = combineLatest([
   leftUp$,
   leftDown$,
   rightUp$,

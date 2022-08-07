@@ -1,7 +1,7 @@
 import { ballOutOfBounds, moveBall } from "./ball-move";
 import { Ball, getInitialBall } from "./ball.interface";
 import { LEFT_PADDLE_X, START_PADDLE_Y, RIGHT_PADDLE_X } from "./dimensions";
-import { MoveState } from "./move-state";
+import { KeysPressed } from "./keys-pressed";
 import { Paddle } from "./paddle.interface";
 
 export interface State {
@@ -23,19 +23,22 @@ export const initialState: State = {
   rightPlayerScore: 0,
 };
 
-export function reducer(state: State, moveState: MoveState): State {
+export function reducer(
+  state: State,
+  { leftUp, leftDown, rightDown, rightUp }: KeysPressed
+): State {
   const outOfBounds = ballOutOfBounds(state.ball);
 
   return {
     ...state,
-    leftPaddle: moveState.leftUp
+    leftPaddle: leftUp
       ? { ...state.leftPaddle, y: state.leftPaddle.y - 10 }
-      : moveState.leftDown
+      : leftDown
       ? { ...state.leftPaddle, y: state.leftPaddle.y + 10 }
       : state.leftPaddle,
-    rightPaddle: moveState.rightUp
+    rightPaddle: rightUp
       ? { ...state.rightPaddle, y: state.rightPaddle.y - 10 }
-      : moveState.rightDown
+      : rightDown
       ? { ...state.rightPaddle, y: state.rightPaddle.y + 10 }
       : state.rightPaddle,
     ball: moveBall(state.ball, state.leftPaddle, state.rightPaddle),
