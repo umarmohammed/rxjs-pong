@@ -8,7 +8,6 @@ import {
   PADDLE_WIDTH,
 } from "./dimensions";
 import { Paddle } from "./paddle.interface";
-import { State } from "./state";
 
 function renderPaddle(ctx: CanvasRenderingContext2D, paddle: Paddle) {
   ctx.fillStyle = "white";
@@ -20,19 +19,25 @@ function renderBall(ctx: CanvasRenderingContext2D, ball: Ball) {
   ctx.fillRect(ball.x, ball.y, BALL_WIDTH, BALL_HEIGHT);
 }
 
-export function renderState(state: State) {
+export function renderState(state: {
+  paddles: [left: Paddle, right: Paddle];
+  ball: Ball;
+  scores: [left: number, right: number];
+}) {
   function renderBoard() {
     const canvas = document.getElementById("board") as HTMLCanvasElement;
     const ctx = canvas.getContext("2d");
-    canvas.setAttribute("width", BOARD_WIDTH.toString());
-    canvas.setAttribute("height", BOARD_HEIGHT.toString());
+    if (ctx) {
+      canvas.setAttribute("width", BOARD_WIDTH.toString());
+      canvas.setAttribute("height", BOARD_HEIGHT.toString());
 
-    ctx.fillStyle = "black";
-    ctx.fillRect(0, 0, BOARD_WIDTH, BOARD_HEIGHT);
+      ctx.fillStyle = "black";
+      ctx.fillRect(0, 0, BOARD_WIDTH, BOARD_HEIGHT);
 
-    renderPaddle(ctx, state.leftPaddle);
-    renderPaddle(ctx, state.rightPaddle);
-    renderBall(ctx, state.ball);
+      renderPaddle(ctx, state.paddles[0]);
+      renderPaddle(ctx, state.paddles[1]);
+      renderBall(ctx, state.ball);
+    }
   }
 
   function renderScore(id: string, score: number) {
@@ -46,6 +51,6 @@ export function renderState(state: State) {
   root.style.height = `${BOARD_HEIGHT}px`;
 
   renderBoard();
-  renderScore("leftPlayerScore", state.leftPlayerScore);
-  renderScore("rightPlayerScore", state.rightPlayerScore);
+  renderScore("leftPlayerScore", state.scores[0]);
+  renderScore("rightPlayerScore", state.scores[1]);
 }

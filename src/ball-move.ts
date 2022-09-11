@@ -1,5 +1,6 @@
 import { Ball, getInitialBall } from "./ball.interface";
 import {
+  BALL_HEIGHT,
   BOARD_HEIGHT,
   BOARD_WIDTH,
   PADDLE_HEIGHT,
@@ -45,7 +46,7 @@ export function ballOutOfBounds(ball: Ball): number {
 }
 
 function bounceBallOffHorizontalWall(ball: Ball): Ball {
-  const ballWithinBoard = ball.y < BOARD_HEIGHT && ball.y > 0;
+  const ballWithinBoard = ball.y <= BOARD_HEIGHT - BALL_HEIGHT && ball.y >= 0;
 
   return ballWithinBoard
     ? ball

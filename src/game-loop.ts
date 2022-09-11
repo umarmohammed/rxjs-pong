@@ -1,14 +1,14 @@
-import { interval, map, scan, withLatestFrom } from "rxjs";
-import { keysPressed$ } from "./input";
+import { combineLatest, map } from "rxjs";
+import { ball$ } from "./ball";
+import { paddles$ } from "./paddles";
 import { renderState } from "./render";
-import { initialState, reducer } from "./state";
+import { scores$ } from "./scores";
 
 export function startGame() {
-  interval(50)
+  combineLatest([paddles$, ball$, scores$])
     .pipe(
-      withLatestFrom(keysPressed$),
-      map(([, keysPressed]) => keysPressed),
-      scan(reducer, initialState)
+      map(([paddles, ball, scores]) => ({ paddles, ball, scores })),
+      map(renderState)
     )
-    .subscribe(renderState);
+    .subscribe();
 }
