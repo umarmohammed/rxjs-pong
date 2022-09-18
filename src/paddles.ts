@@ -22,9 +22,9 @@ function createPaddleObservable(
     scan(
       (paddle, keysPressed) => ({
         ...paddle,
-        y: keysPressed.up
+        y: keysPressed.decrease
           ? paddle.y - PADDLE_Y_MOVE
-          : keysPressed.down
+          : keysPressed.increase
           ? paddle.y + PADDLE_Y_MOVE
           : paddle.y,
       }),

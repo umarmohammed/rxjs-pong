@@ -11,13 +11,13 @@ const rightPaddleGameKeys = ["o", "l"] as const;
 
 type LeftPaddleGameKeys = typeof leftPaddleGameKeys[number];
 type RightPaddleGameKeys = typeof rightPaddleGameKeys[number];
-type GameKeys = LeftPaddleGameKeys & RightPaddleGameKeys;
+type GameKeys = LeftPaddleGameKeys | RightPaddleGameKeys;
 
 export const keyPressToMove: Record<GameKeys, keyof KeysPressed> = {
-  q: "up",
-  a: "down",
-  o: "up",
-  l: "down",
+  q: "decrease",
+  a: "increase",
+  o: "decrease",
+  l: "increase",
 };
 
 function keyEventHof(keyPressEvent: KeyPressEvent) {
