@@ -1,19 +1,20 @@
 import { combineLatest, Observable } from "rxjs";
 import { map, scan, share, withLatestFrom } from "rxjs/operators";
 import {
+  BOARD_HEIGHT,
   LEFT_PADDLE_X,
   PADDLE_Y_MOVE,
   RIGHT_PADDLE_X,
-  START_PADDLE_Y,
 } from "./dimensions";
 import { leftPaddleKeysPressed$, rightPaddleKeysPressed$ } from "./input";
 import { KeysPressed } from "./keys-pressed";
+import { getLineMidpoint, Line } from "./line.interface";
 import { loop$ } from "./loop";
 import { Paddle } from "./paddle.interface";
 
 function createPaddleObservable(
   keysPressed$: Observable<KeysPressed>,
-  startX: number
+  movementAxis: Line
 ) {
   return loop$.pipe(
     withLatestFrom(keysPressed$),
@@ -27,20 +28,24 @@ function createPaddleObservable(
           ? paddle.y + PADDLE_Y_MOVE
           : paddle.y,
       }),
-      { x: startX, y: START_PADDLE_Y } as Paddle
+
+      {
+        x: getLineMidpoint(movementAxis).x,
+        y: getLineMidpoint(movementAxis).y,
+      } as Paddle
     ),
     share()
   );
 }
 
-const leftPaddle$ = createPaddleObservable(
-  leftPaddleKeysPressed$,
-  LEFT_PADDLE_X
-);
-const rightPaddle$ = createPaddleObservable(
-  rightPaddleKeysPressed$,
-  RIGHT_PADDLE_X
-);
+const leftPaddle$ = createPaddleObservable(leftPaddleKeysPressed$, {
+  start: { x: LEFT_PADDLE_X, y: 0 },
+  end: { x: LEFT_PADDLE_X, y: BOARD_HEIGHT },
+});
+const rightPaddle$ = createPaddleObservable(rightPaddleKeysPressed$, {
+  start: { x: RIGHT_PADDLE_X, y: 0 },
+  end: { x: RIGHT_PADDLE_X, y: BOARD_HEIGHT },
+});
 
 export const paddles$: Observable<[left: Paddle, right: Paddle]> =
   combineLatest([leftPaddle$, rightPaddle$]);

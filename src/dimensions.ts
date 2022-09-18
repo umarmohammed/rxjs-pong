@@ -8,7 +8,6 @@ export const BOARD_PADDING = 10;
 export const PADDLE_HEIGHT = 28;
 export const PADDLE_WIDTH = 4;
 
-export const START_PADDLE_Y = BOARD_HEIGHT / 2 - PADDLE_HEIGHT / 2;
 export const PADDLE_Y_MOVE = 5;
 
 export const LEFT_PADDLE_X = BOARD_PADDING;
